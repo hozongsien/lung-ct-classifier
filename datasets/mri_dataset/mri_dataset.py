@@ -31,7 +31,7 @@ class MriDataset(tfds.core.GeneratorBasedBuilder):
             description=_DESCRIPTION,
             features=tfds.features.FeaturesDict({
                 'image': tfds.features.Image(shape=(512, 512, 3)),
-                'label': tfds.features.ClassLabel(names=['0', '1', '2'], num_classes=3),
+                'label': tfds.features.ClassLabel(names=['0', '1', '2']),
             }),
             # If there's a common (input, target) tuple from the
             # features, specify them here. They'll be used if
@@ -52,15 +52,34 @@ class MriDataset(tfds.core.GeneratorBasedBuilder):
                     'labels': os.path.join(extracted_path, 'train_label.csv'),
                 },
             ),
+            tfds.core.SplitGenerator(
+                name=tfds.Split.TEST,
+                gen_kwargs={
+                    'images_dir_path': os.path.join(extracted_path, 'test'),
+                    'labels': None,
+                },
+            ),
         ]
 
-    def _generate_examples(self, images_dir_path, labels):
+    def _generate_examples(self, images_dir_path, labels=None):
         """Yields examples."""
-        with tf.io.gfile.GFile(labels) as f:
-            for row in csv.DictReader(f):
-                image_id = row['ID']
+        if labels is not None:
+            with tf.io.gfile.GFile(labels) as f:
+                for row in csv.DictReader(f):
+                    image_id = row['ID']
+                    # And yield (key, feature_dict)
+                    yield image_id, {
+                        'image': os.path.join(images_dir_path, f'{image_id}.png'),
+                        'label': row['Label'],
+                    }
+        else:
+            filenames = tf.io.gfile.listdir(path=images_dir_path)
+            for filename in filenames:
+                parts = tf.strings.split(filename, '.')
+                image_id = int(parts[0].numpy())
+
                 # And yield (key, feature_dict)
                 yield image_id, {
                     'image': os.path.join(images_dir_path, f'{image_id}.png'),
-                    "label": row['Label'],
+                    'label': -1,  # NO LABEL
                 }
