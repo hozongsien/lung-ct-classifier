@@ -31,7 +31,7 @@ class MriDataset(tfds.core.GeneratorBasedBuilder):
             description=_DESCRIPTION,
             features=tfds.features.FeaturesDict({
                 'image': tfds.features.Image(shape=(512, 512, 3)),
-                'label': tfds.features.ClassLabel(names=['0', '1', '2']),
+                'label': tfds.features.ClassLabel(names=['0', '1', '2'], num_classes=3),
             }),
             # If there's a common (input, target) tuple from the
             # features, specify them here. They'll be used if
