@@ -32,6 +32,7 @@ class MriDataset(tfds.core.GeneratorBasedBuilder):
             features=tfds.features.FeaturesDict({
                 'image': tfds.features.Image(shape=(512, 512, 3)),
                 'label': tfds.features.ClassLabel(names=['0', '1', '2']),
+                'id': tf.int32,
             }),
             # If there's a common (input, target) tuple from the
             # features, specify them here. They'll be used if
@@ -71,6 +72,7 @@ class MriDataset(tfds.core.GeneratorBasedBuilder):
                     yield image_id, {
                         'image': os.path.join(images_dir_path, f'{image_id}.png'),
                         'label': row['Label'],
+                        'id': image_id,
                     }
         else:
             filenames = tf.io.gfile.listdir(path=images_dir_path)
@@ -82,4 +84,5 @@ class MriDataset(tfds.core.GeneratorBasedBuilder):
                 yield image_id, {
                     'image': os.path.join(images_dir_path, f'{image_id}.png'),
                     'label': -1,  # NO LABEL
+                    'id': image_id,
                 }
