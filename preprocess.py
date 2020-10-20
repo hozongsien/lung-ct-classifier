@@ -4,9 +4,9 @@ import tensorflow as tf
 from shutil import copyfile
 
 
-def preprocess_images(data_folder, dataset, raw_folder, processed_folder, ds_type, clip_limit=4, tile_grid_size=(40, 40)):
-    src_filepath = os.path.join(data_folder, dataset, raw_folder, ds_type)
-    dst_filepath = os.path.join(data_folder, dataset, processed_folder, ds_type)
+def preprocess_images(data_folder, raw_folder, processed_folder, ds_type, clip_limit=4, tile_grid_size=(40, 40)):
+    src_filepath = os.path.join(data_folder, raw_folder, ds_type)
+    dst_filepath = os.path.join(data_folder, processed_folder, ds_type)
 
     filenames = tf.io.gfile.listdir(path=src_filepath)
     for filename in filenames:
@@ -25,7 +25,6 @@ def clahe(img, clipLimit=4, tileGridSize=(40, 40)):
 
 # pre-pre-process dataset
 data_folder = 'data'
-dataset = 'mri_dataset'
 raw_folder = 'raw'
 processed_folder = 'processed'
 train_folder = 'train'
@@ -33,13 +32,13 @@ test_folder = 'test'
 train_label = 'train_label.csv'
 
 print(f'Preprocessing {train_folder}')
-preprocess_images(data_folder, dataset, raw_folder, processed_folder,
+preprocess_images(data_folder, raw_folder, processed_folder,
                   train_folder, clip_limit=4, tile_grid_size=(40, 40))
 print(f'Preprocessing {test_folder}')
-preprocess_images(data_folder, dataset, raw_folder, processed_folder,
+preprocess_images(data_folder, raw_folder, processed_folder,
                   test_folder, clip_limit=4, tile_grid_size=(40, 40))
 print(f'Copying {train_label}')
 _ = copyfile(
-    os.path.join(data_folder, dataset, raw_folder, train_label),
-    os.path.join(data_folder, dataset, processed_folder, train_label)
+    os.path.join(data_folder, raw_folder, train_label),
+    os.path.join(data_folder, processed_folder, train_label)
 )
