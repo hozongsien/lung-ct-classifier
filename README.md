@@ -4,15 +4,19 @@
    ```
    pip install -r requirements.txt
    ```
-2. Download data and unzip files.
+2. Create folders for storing data.
+   ```
+   mkdir data data/raw data/processed data/processed/train data/processed/test
+   ```
+3. Download data from kaggle and unzip files.
    ```
    unzip -a nus-cs5242.zip -d data/raw
    ```
-3. Preprocess images and create dataset.
+4. Preprocess images and create dataset.
    ```
    bash prepare_dataset.sh
    ```
-4. Train model using jupyter notebook.
+5. Train model using jupyter notebook.
    ```
    jupyter lab
    ```
