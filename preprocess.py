@@ -23,7 +23,7 @@ def clahe(img, clipLimit=4, tileGridSize=(40, 40)):
     return cl_img
 
 
-# pre-pre-process dataset
+# files and folders
 data_folder = 'data'
 raw_folder = 'raw'
 processed_folder = 'processed'
@@ -31,12 +31,20 @@ train_folder = 'train'
 test_folder = 'test'
 train_label = 'train_label.csv'
 
+# hyperparams
+clip_limit = 4
+tile_grid_size = (40, 40)
+
+
+# pre-pre-process dataset
 print(f'Preprocessing {train_folder}')
 preprocess_images(data_folder, raw_folder, processed_folder,
-                  train_folder, clip_limit=4, tile_grid_size=(40, 40))
+                  train_folder, clip_limit=clip_limit, tile_grid_size=tile_grid_size)
+
 print(f'Preprocessing {test_folder}')
 preprocess_images(data_folder, raw_folder, processed_folder,
-                  test_folder, clip_limit=4, tile_grid_size=(40, 40))
+                  test_folder, clip_limit=clip_limit, tile_grid_size=tile_grid_size)
+
 print(f'Copying {train_label}')
 _ = copyfile(
     os.path.join(data_folder, raw_folder, train_label),
