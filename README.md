@@ -2,6 +2,8 @@
 
 1. Setup environment.
    ```
+   virtualenv env
+   source env/bin/activate
    pip install -r requirements.txt
    ```
 2. Create folders for storing data.
