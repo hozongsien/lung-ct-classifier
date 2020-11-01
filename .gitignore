@@ -1,7 +1,9 @@
+data/
 data/raw/*
 data/processed/*
 data/downloads/*
 .vscode/
 logs/
 *.csv
-
+.ipynb_checkpoints/
+datasets/mri_dataset/__pycache__/
