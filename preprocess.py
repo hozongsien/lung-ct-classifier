@@ -4,15 +4,23 @@ import tensorflow as tf
 from shutil import copyfile
 
 
-def preprocess_images(data_folder, raw_folder, processed_folder, ds_type, clip_limit=4, tile_grid_size=(40, 40)):
+def preprocess_images(data_folder, raw_folder, processed_folder, ds_type, clip_limit=4, tile_grid_size=(8, 8)):
     src_filepath = os.path.join(data_folder, raw_folder, ds_type)
     dst_filepath = os.path.join(data_folder, processed_folder, ds_type)
 
     filenames = tf.io.gfile.listdir(path=src_filepath)
     for filename in filenames:
         img = cv.imread(os.path.join(src_filepath, filename))
+        img = hist_norm(img)
         img = clahe(img, clip_limit, tile_grid_size)
         cv.imwrite(os.path.join(dst_filepath, filename), img)
+
+
+def hist_norm(img):
+    gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    norm_gray_img = cv.equalizeHist(gray_img)
+    norm_img = cv.cvtColor(norm_gray_img, cv.COLOR_GRAY2RGB)
+    return norm_img
 
 
 def clahe(img, clipLimit=4, tileGridSize=(40, 40)):
@@ -33,7 +41,7 @@ train_label = 'train_label.csv'
 
 # hyperparams
 clip_limit = 4
-tile_grid_size = (40, 40)
+tile_grid_size = (8, 8)
 
 
 # pre-pre-process dataset
