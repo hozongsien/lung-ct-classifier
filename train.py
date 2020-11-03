@@ -29,8 +29,7 @@ def feature_extract_and_fine_tune(experiment_name, train_ds, valid_ds, model_par
     )
 
     tf.keras.backend.clear_session()
-    model = create_model(
-        model_params['image_shape'], model_params['num_classes'], base_hyperparams)
+    model = create_model(model_params, base_hyperparams)
     model, history = train_validate(
         model=model,
         train_ds=train_ds,
@@ -69,8 +68,7 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
         )
 
         tf.keras.backend.clear_session()
-        model = create_model(
-            model_params['image_shape'], model_params['num_classes'], base_hyperparams)
+        model = create_model(model_params, base_hyperparams)
         model, history = train_validate(
             model=model,
             train_ds=train_ds,
