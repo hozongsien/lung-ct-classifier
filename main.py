@@ -5,38 +5,13 @@ from train import *
 from utils import *
 
 
-def train_model():
+def train_model(experiment_name, model_params, base_hyperparams, fine_hyperparams):
     data_folder = 'data'
-    raw_folder = 'raw'
-    processed_folder = 'processed'
     dataset = 'lung_ct_dataset'
-    train_folder = 'train'
-    test_folder = 'test'
-    train_label = 'train_label.csv'
 
     SEED = 0
 
-    experiment_name = 'MobileNetV2'
     result_save_path = experiment_name + '_' + 'submission.csv'
-    model_params = {
-        'model_type': 'mobile',
-        'head_type': 'standard',
-        'image_shape': (512, 512, 3),
-        'num_classes': 3,
-    }
-    base_hyperparams = {
-        'train_batch_size': 64,
-        'valid_batch_size': 64,
-        'test_batch_size': 64,
-        'num_epochs': 1,
-        'learning_rate': 1e-4,
-        'dropout': 0.2
-    }
-    fine_hyperparams = {
-        'num_epochs': 1,
-        'learning_rate': 1e-5,
-        'fine_tune_at': 100,
-    }
 
     tf.random.set_seed(SEED)
     gpu_setup()
@@ -85,33 +60,13 @@ def train_model():
     save_model(model, experiment_name)
 
 
-def train_ensemble():
+def train_ensemble(experiment_name, model_params, base_hyperparams):
     data_folder = 'data'
-    raw_folder = 'raw'
-    processed_folder = 'processed'
     dataset = 'lung_ct_dataset'
-    train_folder = 'train'
-    test_folder = 'test'
-    train_label = 'train_label.csv'
 
     SEED = 0
 
-    experiment_name = 'Ensemble01'
     result_save_path = experiment_name + '_' + 'submission.csv'
-    model_params = {
-        'model_names': ['Xception09.1-1_fold', 'MobileNet03-1_fold', 'ResNet03-1_fold'],
-        'head_type': 'ensemble',
-        'image_shape': (512, 512, 3),
-        'num_classes': 3,
-    }
-    base_hyperparams = {
-        'train_batch_size': 64,
-        'valid_batch_size': 64,
-        'test_batch_size': 64,
-        'num_epochs': 1,
-        'learning_rate': 1e-4,
-        'hidden_units': 10
-    }
 
     tf.random.set_seed(SEED)
     gpu_setup()
@@ -164,9 +119,93 @@ def train_ensemble():
 
 
 def main():
-    # TODO: train 3 models then train ensemble
-    # train_model()
-    train_ensemble()
+    model_configs = {
+        'Xception': {
+            'model_params': {
+                'model_type': 'Xception',
+                'head_type': 'standard',
+                'image_shape': (512, 512, 3),
+                'num_classes': 3,
+            },
+            'base_hyperparams': {
+                'train_batch_size': 64,
+                'valid_batch_size': 64,
+                'test_batch_size': 64,
+                'num_epochs': 1,
+                'learning_rate': 1e-4,
+                'dropout': 0.2
+            },
+            'fine_hyperparams': {
+                'num_epochs': 1,
+                'learning_rate': 1e-5,
+                'fine_tune_at': 100,
+            }
+        },
+        'MobileNetV2': {
+            'model_params': {
+                'model_type': 'MobileNetV2',
+                'head_type': 'standard',
+                'image_shape': (512, 512, 3),
+                'num_classes': 3,
+            },
+            'base_hyperparams': {
+                'train_batch_size': 64,
+                'valid_batch_size': 64,
+                'test_batch_size': 64,
+                'num_epochs': 1,
+                'learning_rate': 1e-4,
+                'dropout': 0.2
+            },
+            'fine_hyperparams': {
+                'num_epochs': 1,
+                'learning_rate': 1e-5,
+                'fine_tune_at': 100,
+            }
+        },
+        'ResNet152V2': {
+            'model_params': {
+                'model_type': 'ResNet152V2',
+                'head_type': 'standard',
+                'image_shape': (512, 512, 3),
+                'num_classes': 3,
+            },
+            'base_hyperparams': {
+                'train_batch_size': 64,
+                'valid_batch_size': 64,
+                'test_batch_size': 64,
+                'num_epochs': 1,
+                'learning_rate': 1e-4,
+                'dropout': 0.2
+            },
+            'fine_hyperparams': {
+                'num_epochs': 1,
+                'learning_rate': 1e-5,
+                'fine_tune_at': 100,
+            }
+        },
+    }
+
+    ensemble_config = {
+        'model_params': {
+            'model_names': model_configs.keys(),
+            'head_type': 'ensemble',
+            'image_shape': (512, 512, 3),
+            'num_classes': 3,
+        },
+        'base_hyperparams': {
+            'train_batch_size': 64,
+            'valid_batch_size': 64,
+            'test_batch_size': 64,
+            'num_epochs': 1,
+            'learning_rate': 1e-4,
+            'hidden_units': 10
+        }
+    }
+
+    for model, config in model_configs.items():
+        train_model(model, **config)
+
+    train_ensemble('Ensemble', **ensemble_config)
 
 
 if __name__ == "__main__":

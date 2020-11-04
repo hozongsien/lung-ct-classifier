@@ -15,19 +15,19 @@ class AdaptiveConcatPooling(tf.keras.layers.Layer):
 
 
 def create_base_model(model_type, img_shape):
-    if model_type == 'mobile':
+    if model_type == 'MobileNetV2':
         base_model = tf.keras.applications.MobileNetV2(
             input_shape=img_shape,
             include_top=False,
             weights='imagenet'
         )
-    elif model_type == 'xception':
+    elif model_type == 'Xception':
         base_model = tf.keras.applications.Xception(
             input_shape=img_shape,
             include_top=False,
             weights='imagenet',
         )
-    elif model_type == 'res':
+    elif model_type == 'ResNet152V2':
         base_model = tf.keras.applications.ResNet152V2(
             input_shape=img_shape,
             include_top=False,
