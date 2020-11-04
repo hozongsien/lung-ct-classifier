@@ -1,21 +1,8 @@
 #!/bin/bash
 
-SRC_PATH=nus-cs5242 # replace with path of the dataset here
-DST_PATH=data/processed
-
-
-# clear previous
-rm -r ./data/lung_ct_dataset
-
-# create folders
-mkdir data $DST_PATH $DST_PATH/train $DST_PATH/test
-mkdir models
-
-# enhance images
-python image_enhancement.py $SRC_PATH $DST_PATH
-
-# create tfds dataset
-python -m tensorflow_datasets.scripts.download_and_prepare --datasets=lung_ct_dataset --module_import=datasets.lung_ct_dataset --manual_dir=$DST_PATH --data_dir=data/
+# prepare dataset
+bash prepare_dataset.sh
 
 # train and evaluate
-python main.py # comment out this line to setup dataset only
+mkdir models
+python src/main.py
