@@ -4,6 +4,7 @@ from model import *
 
 
 def train_validate(model, train_ds, valid_ds, hyperparams, initial_epoch, num_epochs, callbacks):
+    """Compiles and fit the given model."""
     model.compile(
         optimizer=tf.keras.optimizers.Adam(
             learning_rate=hyperparams['learning_rate']
@@ -24,6 +25,7 @@ def train_validate(model, train_ds, valid_ds, hyperparams, initial_epoch, num_ep
 
 
 def feature_extract_and_fine_tune(experiment_name, train_ds, valid_ds, model_params, base_hyperparams, fine_hyperparams):
+    """Trains the model first as a feature extractor and then fine tunes the model."""
     tensorboard_callback = tf.keras.callbacks.TensorBoard(
         log_dir=os.path.join('logs', experiment_name)
     )
@@ -55,6 +57,7 @@ def feature_extract_and_fine_tune(experiment_name, train_ds, valid_ds, model_par
 
 
 def cross_validate(experiment_name, train_folds, valid_folds, model_params, base_hyperparams, fine_hyperparams):
+    """Cross validates model performance with the given folds."""
     train_accs, valid_accs, train_losses, valid_losses = [], [], [], []
     for i, (train_ds, valid_ds) in enumerate(zip(train_folds, valid_folds)):
         k = i + 1
@@ -112,6 +115,7 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
 
 
 def ensemble_learn(experiment_name, train_ds, valid_ds, model_params, hyperparams):
+    """Trains an ensemble of pretrained models."""
     tensorboard_callback = tf.keras.callbacks.TensorBoard(
         log_dir=os.path.join('logs', experiment_name)
     )
@@ -131,6 +135,7 @@ def ensemble_learn(experiment_name, train_ds, valid_ds, model_params, hyperparam
 
 
 def evaluate(model, test_ds):
+    """Predicts labels on the given test dataset."""
     predictions = model.predict(test_ds)
     predicted_indices = tf.argmax(predictions, 1)
     predicted_labels = predicted_indices.numpy()

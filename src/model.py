@@ -15,6 +15,7 @@ class AdaptiveConcatPooling(tf.keras.layers.Layer):
 
 
 def create_base_model(model_type, img_shape):
+    """Creates a feature extractor pretrained on imagenet data."""
     if model_type == 'MobileNetV2':
         base_model = tf.keras.applications.MobileNetV2(
             input_shape=img_shape,
@@ -41,6 +42,7 @@ def create_base_model(model_type, img_shape):
 
 
 def create_prediction_layer(head_type, num_classes, hyperparams):
+    """Creates a sequential classification head layer."""
     if head_type == 'standard':
         prediction = tf.keras.Sequential([
             tf.keras.layers.GlobalAveragePooling2D(),
@@ -75,6 +77,7 @@ def create_prediction_layer(head_type, num_classes, hyperparams):
 
 
 def create_model(model_params, hyperparams):
+    """Creates a CNN model."""
     base_model = create_base_model(
         model_params['model_type'], model_params['image_shape'])
     prediction_layer = create_prediction_layer(
@@ -88,6 +91,7 @@ def create_model(model_params, hyperparams):
 
 
 def create_fine_tune_model(model, hyperparams):
+    """Unfreezes a specified number of layers of the given model."""
     print("Number of layers in the base model: ", len(model.layers[1].layers))
     model.layers[1].trainable = True
     for layer in model.layers[1].layers[:hyperparams['fine_tune_at']]:
@@ -108,6 +112,7 @@ def load_models(model_names):
 
 
 def create_ensemble_model(model_params, hyperparams):
+    """Combines multiple models as a single ensemble model."""
     models = load_models(model_params['model_names'])
     prediction_layer = create_prediction_layer(
         model_params['head_type'], model_params['num_classes'], hyperparams)

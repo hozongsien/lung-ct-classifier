@@ -2,6 +2,7 @@ import tensorflow as tf
 
 
 def preprocess(ds, model_params, batch_size, ds_type='train'):
+    """Preprocess tfds dataset."""
     AUTOTUNE = tf.data.experimental.AUTOTUNE
 
     resize_and_rescale = create_resize_and_rescale_layer(model_params)
@@ -28,6 +29,7 @@ def preprocess(ds, model_params, batch_size, ds_type='train'):
 
 
 def preprocess_ensemble(ds, model_params):
+    """Preprocess tfds dataset for ensemble model with multiple input heads."""
     AUTOTUNE = tf.data.experimental.AUTOTUNE
     ds = ds.map(lambda x, y: (
         {'ensemble_0_input_2': x, 'ensemble_1_input_2': x, 'ensemble_2_input_2': x}, y))
@@ -36,6 +38,7 @@ def preprocess_ensemble(ds, model_params):
 
 
 def create_resize_and_rescale_layer(model_params):
+    """Creates a sequential layer that resizes and rescale input images."""
     resize_and_rescale = tf.keras.Sequential([
         tf.keras.layers.experimental.preprocessing.Resizing(
             model_params['image_shape'][0],
@@ -49,6 +52,7 @@ def create_resize_and_rescale_layer(model_params):
 
 
 def create_augmentation_layer():
+    """Creates a sequential layer that applies data augmentation on input images."""
     data_augmentation = tf.keras.Sequential([
         tf.keras.layers.experimental.preprocessing.RandomFlip(),
         tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),

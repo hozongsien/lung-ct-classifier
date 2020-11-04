@@ -5,6 +5,7 @@ from tensorflow.keras.mixed_precision import experimental as mixed_precision
 
 
 def gpu_setup():
+    """Setup the available GPUs to be used for training."""
     physical_devices = tf.config.list_physical_devices('GPU')
     try:
         # Specify GPU to restrict usage below
@@ -18,6 +19,7 @@ def gpu_setup():
 
 
 def mixed_precision_setup():
+    """Setup support for mixed precision training."""
     policy = mixed_precision.Policy('mixed_float16')
     mixed_precision.set_policy(policy)
 
@@ -50,6 +52,8 @@ def plot(acc, val_acc, loss, val_loss, initial_epochs=0):
 
 
 def save_results(image_ids, predicted_labels, save_path):
+    """Saves the predicted labels to csv."""
+    print('Saving predictions\n')
     results = image_ids.drop('image', axis=1)
     results.columns = ['ID', 'Label']
     results['Label'] = predicted_labels
@@ -58,6 +62,7 @@ def save_results(image_ids, predicted_labels, save_path):
 
 
 def save_model(model, experiment_name):
+    """Saves the given model."""
     print('Saving model\n')
     filename = os.path.join('models', experiment_name, '.h5')
     model.save(filename)

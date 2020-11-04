@@ -6,6 +6,7 @@ from shutil import copyfile
 
 
 def preprocess_images(src_path, dst_path, ds_type, clip_limit=4, tile_grid_size=(8, 8)):
+    """Applies image pre-processing on the specified data."""
     src_filepath = os.path.join(src_path, ds_type)
     dst_filepath = os.path.join(dst_path, ds_type)
 
@@ -18,6 +19,7 @@ def preprocess_images(src_path, dst_path, ds_type, clip_limit=4, tile_grid_size=
 
 
 def hist_norm(img):
+    """Applies histogram normalisation on the given image."""
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     norm_gray_img = cv.equalizeHist(gray_img)
     norm_img = cv.cvtColor(norm_gray_img, cv.COLOR_GRAY2RGB)
@@ -25,6 +27,7 @@ def hist_norm(img):
 
 
 def clahe(img, clipLimit=4, tileGridSize=(40, 40)):
+    """Applies contrast limited histogram normalisation on the given image."""
     clahe = cv.createCLAHE(clipLimit, tileGridSize)
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     cl_img = clahe.apply(gray_img)
