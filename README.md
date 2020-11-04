@@ -37,11 +37,20 @@ tensorboard --logdir=logs
 
 # Visulisation and Tuning
 
-This code comes with a companion jupyter notebook `tune.ipynb` to visualise the output of the data preprocessing and to select the best hyperparameters to train each model. Launch the jupyter notebook using this command below.
+This code comes with a companion jupyter notebook `tune.ipynb` to visualise the output of the data preprocessing and to select the best hyperparameters to train each model.
 
-```
-jupyter lab
-```
+1. Comment out the train and evaluate line `python main.py` in `run.sh`.
+   ```
+   vim run.sh
+   ```
+2. Execute script to prepare dataset.
+   ```
+   bash run.sh
+   ```
+3. Launch the jupyter notebook.
+   ```
+   jupyter lab
+   ```
 
 # Approach Summary
 
