@@ -2,28 +2,32 @@
 
 This proposed model aims to classify lung CT scans into 3 anoynmised catergories using an ensemble of 3 models MobileNetV2, Xception and ResNet152V2. This approach achieved 94.52% accuracy on an unseen test set.
 
+# Prerequisite
+
+- python 3.7.9
+
 # Quick Start
 
-The instruction below trains and evaluates the proposed model on the lung CT dataset.
+The instructions below trains and evaluates the proposed model on the lung CT dataset.
 
 1. Setup virtual environment.
-   ```
+   ```lang-bash
    virtualenv env
    source env/bin/activate
-   pip install -r requirements.txt
+   pip3 install -r requirements.txt
    ```
 2. Download the dataset and unzip the files to your desired location.
-   ```
+   ```lang-bash
    unzip -a nus-cs5242.zip
    ```
 3. Assign the path of the unzipped dataset in step 2 to SRC_PATH in the `prepare_dataset.sh` script.
 
-   ```
+   ```lang-bash
    vim prepare_dataset.sh
    ```
 
 4. Execute script to train models and evaluate on test dataset.
-   ```
+   ```lang-bash
    bash run.sh
    ```
 
@@ -31,7 +35,7 @@ The instruction below trains and evaluates the proposed model on the lung CT dat
 
 This code comes with tensorboard support to track the loss curves and evaluation metrics of the proposed model. Launch tensorboard using this command below.
 
-```
+```lang-bash
 tensorboard --logdir=logs
 ```
 
@@ -42,7 +46,7 @@ This code comes with a companion jupyter notebook `tune.ipynb` to visualise the 
 1. Execute the same steps 1-3 from [Quick Start](#quick-start) above.
 
 2. Launch jupyter.
-   ```
+   ```lang-bash
    jupyter lab
    ```
 
