@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SRC_PATH=data/raw
+SRC_PATH=nus-cs5242 # replace with path of the dataset here
 DST_PATH=data/processed
 
 
