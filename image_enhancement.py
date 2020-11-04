@@ -1,12 +1,13 @@
+import argparse
 import os
 import cv2 as cv
 import tensorflow as tf
 from shutil import copyfile
 
 
-def preprocess_images(data_folder, src_folder, dst_folder, ds_type, clip_limit=4, tile_grid_size=(8, 8)):
-    src_filepath = os.path.join(data_folder, src_folder, ds_type)
-    dst_filepath = os.path.join(data_folder, dst_folder, ds_type)
+def preprocess_images(src_path, dst_path, ds_type, clip_limit=4, tile_grid_size=(8, 8)):
+    src_filepath = os.path.join(src_path, ds_type)
+    dst_filepath = os.path.join(dst_path, ds_type)
 
     filenames = tf.io.gfile.listdir(path=src_filepath)
     for filename in filenames:
@@ -32,10 +33,13 @@ def clahe(img, clipLimit=4, tileGridSize=(40, 40)):
 
 
 def main():
-    # TODO: parse arguments for image enhancement
-    data_folder = 'data'
-    src_folder = 'raw'
-    dst_folder = 'processed'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('src_path', type=str,
+                        help='source path of the original data.')
+    parser.add_argument('dst_path', type=str,
+                        help='destination path of the data after enhancement.')
+    args = parser.parse_args()
+
     train_folder = 'train'
     test_folder = 'test'
     train_label = 'train_label.csv'
@@ -46,17 +50,17 @@ def main():
 
     # enhance image dataset
     print(f'Preprocessing {train_folder}')
-    preprocess_images(data_folder, src_folder, dst_folder,
-                      train_folder, clip_limit=clip_limit, tile_grid_size=tile_grid_size)
+    preprocess_images(args.src_path, args.dst_path, train_folder,
+                      clip_limit=clip_limit, tile_grid_size=tile_grid_size)
 
     print(f'Preprocessing {test_folder}')
-    preprocess_images(data_folder, src_folder, dst_folder,
-                      test_folder, clip_limit=clip_limit, tile_grid_size=tile_grid_size)
+    preprocess_images(args.src_path, args.dst_path, test_folder,
+                      clip_limit=clip_limit, tile_grid_size=tile_grid_size)
 
     print(f'Copying {train_label}')
     _ = copyfile(
-        os.path.join(data_folder, src_folder, train_label),
-        os.path.join(data_folder, dst_folder, train_label)
+        os.path.join(args.src_path, train_label),
+        os.path.join(args.dst_path, train_label)
     )
 
 
