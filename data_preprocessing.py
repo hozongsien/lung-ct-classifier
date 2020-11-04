@@ -27,7 +27,7 @@ def preprocess(ds, model_params, batch_size, ds_type='train'):
     return ds
 
 
-def preprocess_ensemble(ds):
+def preprocess_ensemble(ds, model_params):
     AUTOTUNE = tf.data.experimental.AUTOTUNE
     ds = ds.map(lambda x, y: (
         {'ensemble_0_input_2': x, 'ensemble_1_input_2': x, 'ensemble_2_input_2': x}, y))

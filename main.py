@@ -108,9 +108,9 @@ def train_ensemble(experiment_name, model_params, base_hyperparams):
 
     train_ds = train_ds.concatenate(valid_ds)  # train on entire dataset
 
-    train_ds = preprocess_ensemble(train_ds)
-    valid_ds = preprocess_ensemble(valid_ds)
-    test_ds = preprocess_ensemble(test_ds)
+    train_ds = preprocess_ensemble(train_ds, model_params)
+    valid_ds = preprocess_ensemble(valid_ds, model_params)
+    test_ds = preprocess_ensemble(test_ds, model_params)
 
     ensemble_model = ensemble_learn(
         experiment_name, train_ds, valid_ds, model_params, base_hyperparams)

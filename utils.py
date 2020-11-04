@@ -7,14 +7,14 @@ from tensorflow.keras.mixed_precision import experimental as mixed_precision
 def gpu_setup():
     physical_devices = tf.config.list_physical_devices('GPU')
     try:
-      # Disable first GPU
-      tf.config.set_visible_devices(physical_devices[1:], 'GPU')
-      logical_devices = tf.config.list_logical_devices('GPU')
-      # Logical device was not created for first GPU
-      assert len(logical_devices) == len(physical_devices) - 1
+        # Specify GPU to restrict usage below
+        tf.config.set_visible_devices(physical_devices, 'GPU')
+        logical_devices = tf.config.list_logical_devices('GPU')
+        # Logical device was not created for first GPU
+        assert len(logical_devices) == len(physical_devices) - 1
     except:
-      # Invalid device or cannot modify virtual devices once initialized.
-      pass
+        # Invalid device or cannot modify virtual devices once initialized.
+        pass
 
 
 def mixed_precision_setup():
@@ -32,8 +32,8 @@ def plot(acc, val_acc, loss, val_loss, initial_epochs=0):
     plt.ylim([min(plt.ylim()), 1.0])
     plt.title('Training and Validation Accuracy')
     if initial_epochs != 0:
-        plt.plot([initial_epochs-1,initial_epochs-1],
-            plt.ylim(), label='Start Fine Tuning')
+        plt.plot([initial_epochs-1, initial_epochs-1],
+                 plt.ylim(), label='Start Fine Tuning')
 
     plt.subplot(2, 1, 2)
     plt.plot(loss, label='Training Loss')
@@ -44,15 +44,15 @@ def plot(acc, val_acc, loss, val_loss, initial_epochs=0):
     plt.title('Training and Validation Loss')
     plt.xlabel('epoch')
     if initial_epochs != 0:
-        plt.plot([initial_epochs-1,initial_epochs-1],
-            plt.ylim(), label='Start Fine Tuning')
+        plt.plot([initial_epochs-1, initial_epochs-1],
+                 plt.ylim(), label='Start Fine Tuning')
     plt.show()
 
 
 def save_results(image_ids, predicted_labels, save_path):
     results = image_ids.drop('image', axis=1)
     results.columns = ['ID', 'Label']
-    results['Label'] = predicted_labels 
+    results['Label'] = predicted_labels
     results = results.sort_values('ID').reset_index(drop=True)
     results.to_csv(save_path, index=False)
 
