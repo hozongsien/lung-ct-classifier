@@ -55,7 +55,6 @@ def feature_extract_and_fine_tune(experiment_name, train_ds, valid_ds, model_par
 
 
 def cross_validate(experiment_name, train_folds, valid_folds, model_params, base_hyperparams, fine_hyperparams):
-    models = []
     train_accs, valid_accs, train_losses, valid_losses = [], [], [], []
     for i, (train_ds, valid_ds) in enumerate(zip(train_folds, valid_folds)):
         k = i + 1
@@ -98,7 +97,7 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
 
         print(f'{experiment_name} | Train Loss: {train_loss} | Train Accuracy: {train_acc} | Validation Loss: {valid_loss} | Validation Accuracy: {valid_acc}\n')
 
-        models.append(model)
+        # models.append(model)
         train_accs.append(train_acc)
         valid_accs.append(valid_acc)
         train_losses.append(train_loss)
@@ -110,8 +109,6 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
     avg_valid_loss = np.mean(valid_loss)
 
     print(f'Avg Train Loss: {avg_train_loss} | Avg Train Accuracy: {avg_train_acc} | Avg Validation Loss: {avg_valid_loss} | Avg Validation Accuracy: {avg_valid_acc}\n')
-
-    return models
 
 
 def ensemble_learn(experiment_name, train_ds, valid_ds, model_params, hyperparams):
@@ -131,6 +128,7 @@ def ensemble_learn(experiment_name, train_ds, valid_ds, model_params, hyperparam
         callbacks=[tensorboard_callback]
     )
     return model
+
 
 def evaluate(model, test_ds):
     predictions = model.predict(test_ds)
