@@ -60,6 +60,14 @@ def create_prediction_layer(head_type, num_classes, hyperparams):
             tf.keras.layers.Activation(
                 'softmax', dtype='float32', name='probs'),
         ], name='prediction')
+    elif head_type == 'ensemble':
+        prediction = tf.keras.Sequential([
+            tf.keras.layers.Dense(
+                hyperparams['hidden_units'], activation='relu'),
+            tf.keras.layers.Dense(num_classes, name='logits'),
+            tf.keras.layers.Activation(
+                'softmax', dtype='float32', name='probs'),
+        ], name='prediction')
     else:
         raise RuntimeError(f'head_type={head_type} unsupported')
 
@@ -88,11 +96,9 @@ def create_fine_tune_model(model, hyperparams):
     return model
 
 
-def load_ensmble_models():
-    filenames = ['Xception09.1-1_fold',
-                 'MobileNet03-1_fold', 'ResNet03-1_fold']
+def load_models(model_names):
     models = []
-    for i, name in enumerate(filenames):
+    for i, name in enumerate(model_names):
         model = tf.keras.models.load_model(os.path.join('models', name, '.h5'))
         for layer in model.layers:
             layer.trainable = False
@@ -101,18 +107,10 @@ def load_ensmble_models():
     return models
 
 
-def create_ensemble_prediction_layer():
-    prediction = tf.keras.Sequential([
-        tf.keras.layers.Dense(10, activation='relu'),
-        tf.keras.layers.Dense(3, name='logits'),
-        tf.keras.layers.Activation('softmax', dtype='float32', name='probs'),
-    ], name='prediction')
-    return prediction
-
-
-def create_ensemble_model():
-    models = load_ensmble_models()
-    prediction_layer = create_ensemble_prediction_layer()
+def create_ensemble_model(model_params, hyperparams):
+    models = load_models(model_params['model_names'])
+    prediction_layer = create_prediction_layer(
+        model_params['head_type'], model_params['num_classes'], hyperparams)
 
     ensemble_inputs = [model.input for model in models]
     ensemble_outputs = [model.output for model in models]

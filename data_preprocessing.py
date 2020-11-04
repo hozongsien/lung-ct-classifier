@@ -27,16 +27,10 @@ def preprocess(ds, model_params, batch_size, ds_type='train'):
     return ds
 
 
-def ensemble_input(ds, ds_type='train'):
+def preprocess_ensemble(ds):
     AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-    if ds_type == 'train' or ds_type == 'valid':
-        ds = ds.map(lambda x, y: (
-            {'ensemble_0_input_2': x, 'ensemble_1_input_2': x, 'ensemble_2_input_2': x}, y))
-    if ds_type == 'test':
-        ds = ds.map(lambda ds: (
-            {'ensemble_0_input_2': ds['image'], 'ensemble_1_input_2': ds['image'], 'ensemble_2_input_2': ds['image']}, ds['label']))
-
+    ds = ds.map(lambda x, y: (
+        {'ensemble_0_input_2': x, 'ensemble_1_input_2': x, 'ensemble_2_input_2': x}, y))
     ds = ds.prefetch(buffer_size=AUTOTUNE)
     return ds
 

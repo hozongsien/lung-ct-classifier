@@ -1,6 +1,7 @@
+import os
 import tensorflow as tf
-from tensorflow.keras.mixed_precision import experimental as mixed_precision
 import matplotlib.pyplot as plt
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 
 
 def gpu_setup():
@@ -15,9 +16,11 @@ def gpu_setup():
       # Invalid device or cannot modify virtual devices once initialized.
       pass
 
+
 def mixed_precision_setup():
     policy = mixed_precision.Policy('mixed_float16')
     mixed_precision.set_policy(policy)
+
 
 def plot(acc, val_acc, loss, val_loss, initial_epochs=0):
     plt.figure(figsize=(8, 8))
@@ -52,3 +55,9 @@ def save_results(image_ids, predicted_labels, save_path):
     results['Label'] = predicted_labels 
     results = results.sort_values('ID').reset_index(drop=True)
     results.to_csv(save_path, index=False)
+
+
+def save_model(model, experiment_name):
+    print('Saving model\n')
+    filename = os.path.join('models', experiment_name, '.h5')
+    model.save(filename)

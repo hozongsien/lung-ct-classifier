@@ -114,6 +114,24 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
     return models
 
 
+def ensemble_learn(experiment_name, train_ds, valid_ds, model_params, hyperparams):
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(
+        log_dir=os.path.join('logs', experiment_name)
+    )
+
+    tf.keras.backend.clear_session()
+    model = create_ensemble_model(model_params, hyperparams)
+    model, history = train_validate(
+        model=model,
+        train_ds=train_ds,
+        valid_ds=valid_ds,
+        hyperparams=hyperparams,
+        initial_epoch=0,
+        num_epochs=hyperparams['num_epochs'],
+        callbacks=[tensorboard_callback]
+    )
+    return model
+
 def evaluate(model, test_ds):
     predictions = model.predict(test_ds)
     predicted_indices = tf.argmax(predictions, 1)

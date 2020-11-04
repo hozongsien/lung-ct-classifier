@@ -32,6 +32,7 @@ def clahe(img, clipLimit=4, tileGridSize=(40, 40)):
 
 
 def main():
+    # TODO: parse arguments for image enhancement
     data_folder = 'data'
     src_folder = 'raw'
     dst_folder = 'processed'
@@ -43,7 +44,7 @@ def main():
     clip_limit = 4
     tile_grid_size = (8, 8)
 
-    # pre-pre-process dataset
+    # enhance image dataset
     print(f'Preprocessing {train_folder}')
     preprocess_images(data_folder, src_folder, dst_folder,
                       train_folder, clip_limit=clip_limit, tile_grid_size=tile_grid_size)
