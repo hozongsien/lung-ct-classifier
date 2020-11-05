@@ -34,17 +34,19 @@ def clahe(img, clipLimit=4, tileGridSize=(40, 40)):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('src_data_path', type=str,
-                        help='Read location of raw data.')
+    parser.add_argument('src_train_data_path', type=str,
+                        help='Read location of raw train data.')
+    parser.add_argument('src_test_data_path', type=str,
+                        help='Read location of raw test data.')
     parser.add_argument('dst_data_path', type=str,
                         help='Write location of processed data.')
 
     args = parser.parse_args()
 
-    src_train_data_path = 'train_image/train_image'
-    src_test_data_path = 'test_image/test_image'
-    dst_train_data_path = 'train'
-    dst_test_data_path = 'test'
+    src_train_img_path = 'train_images'
+    src_test_img_path = 'test_images'
+    dst_train_img_path = 'train'
+    dst_test_img_path = 'test'
     train_label = 'train_label.csv'
 
     # hyperparams
@@ -54,23 +56,23 @@ def main():
     # enhance images
     print(f'Preprocessing train images...')
     preprocess_images(
-        src_path=os.path.join(args.src_data_path, src_train_data_path),
-        dst_path=os.path.join(args.dst_data_path, dst_train_data_path),
+        src_path=os.path.join(args.src_train_data_path, src_train_img_path),
+        dst_path=os.path.join(args.dst_data_path, dst_train_img_path),
         clip_limit=clip_limit,
         tile_grid_size=tile_grid_size
     )
 
     print(f'Preprocessing test images...')
     preprocess_images(
-        src_path=os.path.join(args.src_data_path, src_test_data_path),
-        dst_path=os.path.join(args.dst_data_path, dst_test_data_path),
+        src_path=os.path.join(args.src_test_data_path, src_test_img_path),
+        dst_path=os.path.join(args.dst_data_path, dst_test_img_path),
         clip_limit=clip_limit,
         tile_grid_size=tile_grid_size
     )
 
     print(f'Copying train labels...')
     _ = copyfile(
-        src=os.path.join(args.src_data_path, train_label),
+        src=os.path.join(args.src_train_data_path, train_label),
         dst=os.path.join(args.dst_data_path, train_label)
     )
 

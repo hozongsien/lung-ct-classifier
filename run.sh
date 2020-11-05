@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # prepare dataset
-bash prepare_dataset.sh
+bash prepare_dataset.sh $1 $2
 
 # train and evaluate
-mkdir models
 python src/main.py

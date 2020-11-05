@@ -12,43 +12,16 @@ This proposed model aims to classify lung CT scans into 3 anoynmised catergories
 The instructions below trains and evaluates the proposed model on the lung CT dataset.
 
 1. Setup virtual environment.
+
    ```
    virtualenv env
    source env/bin/activate
    pip3 install -r requirements.txt
    ```
-2. Download the dataset and unzip the files to your desired location.
+
+2. Execute script to train models and evaluate on test dataset.
    ```
-   unzip -a nus-cs5242.zip
-   ```
-3. Assign the path of the unzipped dataset chosen in step 2 to SRC_PATH in the `prepare_dataset.sh` script.
-
-   ```
-   vim prepare_dataset.sh
-   ```
-
-4. Execute script to train models and evaluate on test dataset.
-   ```
-   bash run.sh
-   ```
-
-# Logging
-
-This code comes with tensorboard support to track the loss curves and evaluation metrics of the proposed model. Launch tensorboard using this command below.
-
-```
-tensorboard --logdir=logs
-```
-
-# Visulisation and Tuning
-
-This code comes with a companion jupyter notebook `tune.ipynb` to visualise the output of the data preprocessing and to select the best hyperparameters to train each model.
-
-1. Execute the same steps 1-3 from [Quick Start](#quick-start) above.
-
-2. Launch jupyter.
-   ```
-   jupyter lab
+   bash run.sh train_data test_data
    ```
 
 # Approach Summary

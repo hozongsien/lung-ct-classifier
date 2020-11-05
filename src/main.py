@@ -11,7 +11,7 @@ def train_model(experiment_name, model_params, base_hyperparams, fine_hyperparam
 
     SEED = 0
 
-    result_save_path = experiment_name + '_' + 'submission.csv'
+    result_save_path = 'test_result.csv'
 
     tf.random.set_seed(SEED)
     gpu_setup()
@@ -56,7 +56,7 @@ def train_model(experiment_name, model_params, base_hyperparams, fine_hyperparam
     model = feature_extract_and_fine_tune(
         experiment_name, train_ds, valid_ds, model_params, base_hyperparams, fine_hyperparams)
     predicted_labels = evaluate(model, test_ds)
-    save_results(img_ids, predicted_labels, result_save_path)
+    # save_results(img_ids, predicted_labels, result_save_path)
     save_model(model, experiment_name)
 
 
@@ -66,7 +66,7 @@ def train_ensemble(experiment_name, model_params, base_hyperparams):
 
     SEED = 0
 
-    result_save_path = experiment_name + '_' + 'submission.csv'
+    result_save_path = 'test_result.csv'
 
     tf.random.set_seed(SEED)
     gpu_setup()
