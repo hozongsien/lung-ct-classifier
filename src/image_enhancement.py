@@ -5,17 +5,14 @@ import tensorflow as tf
 from shutil import copyfile
 
 
-def preprocess_images(src_path, dst_path, ds_type, clip_limit=4, tile_grid_size=(8, 8)):
+def preprocess_images(src_path, dst_path, clip_limit=4, tile_grid_size=(8, 8)):
     """Applies image pre-processing on the specified data."""
-    src_filepath = os.path.join(src_path, ds_type)
-    dst_filepath = os.path.join(dst_path, ds_type)
-
-    filenames = tf.io.gfile.listdir(path=src_filepath)
+    filenames = tf.io.gfile.listdir(path=src_path)
     for filename in filenames:
-        img = cv.imread(os.path.join(src_filepath, filename))
+        img = cv.imread(os.path.join(src_path, filename))
         img = hist_norm(img)
         img = clahe(img, clip_limit, tile_grid_size)
-        cv.imwrite(os.path.join(dst_filepath, filename), img)
+        cv.imwrite(os.path.join(dst_path, filename), img)
 
 
 def hist_norm(img):
@@ -37,33 +34,44 @@ def clahe(img, clipLimit=4, tileGridSize=(40, 40)):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('src_path', type=str,
-                        help='source path of the original data.')
-    parser.add_argument('dst_path', type=str,
-                        help='destination path of the data after enhancement.')
+    parser.add_argument('src_data_path', type=str,
+                        help='Read location of raw data.')
+    parser.add_argument('dst_data_path', type=str,
+                        help='Write location of processed data.')
+
     args = parser.parse_args()
 
-    train_folder = 'train'
-    test_folder = 'test'
+    src_train_data_path = 'train_image/train_image'
+    src_test_data_path = 'test_image/test_image'
+    dst_train_data_path = 'train'
+    dst_test_data_path = 'test'
     train_label = 'train_label.csv'
 
     # hyperparams
     clip_limit = 4
     tile_grid_size = (8, 8)
 
-    # enhance image dataset
-    print(f'Preprocessing {train_folder}')
-    preprocess_images(args.src_path, args.dst_path, train_folder,
-                      clip_limit=clip_limit, tile_grid_size=tile_grid_size)
+    # enhance images
+    print(f'Preprocessing train images...')
+    preprocess_images(
+        src_path=os.path.join(args.src_data_path, src_train_data_path),
+        dst_path=os.path.join(args.dst_data_path, dst_train_data_path),
+        clip_limit=clip_limit,
+        tile_grid_size=tile_grid_size
+    )
 
-    print(f'Preprocessing {test_folder}')
-    preprocess_images(args.src_path, args.dst_path, test_folder,
-                      clip_limit=clip_limit, tile_grid_size=tile_grid_size)
+    print(f'Preprocessing test images...')
+    preprocess_images(
+        src_path=os.path.join(args.src_data_path, src_test_data_path),
+        dst_path=os.path.join(args.dst_data_path, dst_test_data_path),
+        clip_limit=clip_limit,
+        tile_grid_size=tile_grid_size
+    )
 
-    print(f'Copying {train_label}')
+    print(f'Copying train labels...')
     _ = copyfile(
-        os.path.join(args.src_path, train_label),
-        os.path.join(args.dst_path, train_label)
+        src=os.path.join(args.src_data_path, train_label),
+        dst=os.path.join(args.dst_data_path, train_label)
     )
 
 
