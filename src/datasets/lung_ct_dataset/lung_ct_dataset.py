@@ -14,9 +14,13 @@ _DESCRIPTION = """
 _CITATION = """
 """
 
+TRAIN_FOLDER = 'train'
+TEST_FOLDER = 'test'
+TRAIN_LABEL = 'train_label.csv'
+
 
 class LungCTDataset(tfds.core.GeneratorBasedBuilder):
-    """DatasetBuilder for mri_dataset dataset."""
+    """DatasetBuilder for lung_ct_dataset."""
 
     VERSION = tfds.core.Version('1.0.0')
     RELEASE_NOTES = {
@@ -47,14 +51,14 @@ class LungCTDataset(tfds.core.GeneratorBasedBuilder):
             tfds.core.SplitGenerator(
                 name=tfds.Split.TRAIN,
                 gen_kwargs={
-                    'images_dir_path': os.path.join(extracted_path, 'train'),
-                    'labels': os.path.join(extracted_path, 'train_label.csv'),
+                    'images_dir_path': os.path.join(extracted_path, TRAIN_FOLDER),
+                    'labels': os.path.join(extracted_path, TRAIN_LABEL),
                 },
             ),
             tfds.core.SplitGenerator(
                 name=tfds.Split.TEST,
                 gen_kwargs={
-                    'images_dir_path': os.path.join(extracted_path, 'test'),
+                    'images_dir_path': os.path.join(extracted_path, TEST_FOLDER),
                     'labels': None,
                 },
             ),
