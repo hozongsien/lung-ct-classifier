@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# prepare dataset
-bash prepare_dataset.sh $1 $2
+bash code/run.sh $1 $2
 
-# train and evaluate
-python src/main.py
+mv code/test_result.csv ./test_result.csv

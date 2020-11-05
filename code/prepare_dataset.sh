@@ -1,5 +1,8 @@
 #!/bin/bash
 
+scriptdir="$(dirname "$0")"
+cd "$scriptdir"
+
 SRC_TRAIN_DATA_PATH=$1
 SRC_TEST_DATA_PATH=$2 
 DST_DATA_PATH=data/processed
