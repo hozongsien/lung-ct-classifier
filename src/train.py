@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+from tensorboard.plugins.hparams import api as hp
 from model import *
 
 
@@ -56,18 +57,18 @@ def feature_extract_and_fine_tune(experiment_name, train_ds, valid_ds, model_par
     return model
 
 
-def cross_validate(experiment_name, train_folds, valid_folds, model_params, base_hyperparams, fine_hyperparams):
+def cross_validate(experiment_name, train_folds, valid_folds, model_params, base_hyperparams, fine_hyperparams, hparams):
     """Cross validates model performance with the given folds."""
     train_accs, valid_accs, train_losses, valid_losses = [], [], [], []
     for i, (train_ds, valid_ds) in enumerate(zip(train_folds, valid_folds)):
         k = i + 1
         experiment_name_fold = f'{experiment_name}: {k}-fold'
-        print(
-            f'# -------------------- {experiment_name_fold} -------------------- #')
+        print(f'# -------------------- {experiment_name_fold} -------------------- #')
 
         tensorboard_callback = tf.keras.callbacks.TensorBoard(
             log_dir=os.path.join('logs', experiment_name_fold)
         )
+        hparams_callback = hp.KerasCallback(os.path.join('logs', 'hparam_tuning', experiment_name_fold), hparams)
 
         tf.keras.backend.clear_session()
         model = create_model(model_params, base_hyperparams)
@@ -90,7 +91,7 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
             initial_epoch=base_hyperparams['num_epochs'],
             num_epochs=base_hyperparams['num_epochs'] +
             fine_hyperparams['num_epochs'],
-            callbacks=[tensorboard_callback]
+            callbacks=[tensorboard_callback, hparams_callback]
         )
 
         train_acc = history.history['accuracy'][-1]
@@ -112,6 +113,7 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
     avg_valid_loss = np.mean(valid_loss)
 
     print(f'Avg Train Loss: {avg_train_loss} | Avg Train Accuracy: {avg_train_acc} | Avg Validation Loss: {avg_valid_loss} | Avg Validation Accuracy: {avg_valid_acc}\n')
+    return avg_train_loss, avg_train_acc, avg_valid_loss, avg_valid_acc
 
 
 def ensemble_learn(experiment_name, train_ds, valid_ds, model_params, hyperparams):

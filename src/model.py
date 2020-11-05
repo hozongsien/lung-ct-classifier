@@ -57,7 +57,7 @@ def create_prediction_layer(head_type, num_classes, hyperparams):
             AdaptiveConcatPooling(),
             tf.keras.layers.Flatten(),
             tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.Dropout(0.75),
+            tf.keras.layers.Dropout(hyperparams['dropout']),
             tf.keras.layers.Dense(num_classes, name='logits'),
             tf.keras.layers.Activation(
                 'softmax', dtype='float32', name='probs'),
@@ -92,10 +92,13 @@ def create_model(model_params, hyperparams):
 
 def create_fine_tune_model(model, hyperparams):
     """Unfreezes a specified number of layers of the given model."""
-    print("Number of layers in the base model: ", len(model.layers[1].layers))
-    model.layers[1].trainable = True
-    for layer in model.layers[1].layers[:hyperparams['fine_tune_at']]:
-        layer.trainable = False
+    num_layers = len(model.layers[1].layers)
+    print(f'Number of layers in the base model: {num_layers}\n')
+
+    model.layers[1].trainable = False
+    start_unfreeze = num_layers - hyperparams['num_unfreeze']
+    for layer in model.layers[1].layers[start_unfreeze:]:
+        layer.trainable = True
 
     return model
 

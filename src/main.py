@@ -138,7 +138,7 @@ def main():
             'fine_hyperparams': {
                 'num_epochs': 1,
                 'learning_rate': 1e-5,
-                'fine_tune_at': 100,
+                'num_unfreeze': 10,
             }
         },
         'MobileNetV2': {
@@ -159,7 +159,7 @@ def main():
             'fine_hyperparams': {
                 'num_epochs': 1,
                 'learning_rate': 1e-5,
-                'fine_tune_at': 100,
+                'num_unfreeze': 10,
             }
         },
         'ResNet152V2': {
@@ -180,7 +180,7 @@ def main():
             'fine_hyperparams': {
                 'num_epochs': 1,
                 'learning_rate': 1e-5,
-                'fine_tune_at': 100,
+                'num_unfreeze': 10,
             }
         },
     }
