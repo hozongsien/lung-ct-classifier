@@ -25,11 +25,9 @@ def train_validate(model, train_ds, valid_ds, hyperparams, initial_epoch, num_ep
     return model, history
 
 
-def feature_extract_and_fine_tune(experiment_name, train_ds, valid_ds, model_params, base_hyperparams, fine_hyperparams):
+def feature_extract_and_fine_tune(logdir, train_ds, valid_ds, model_params, base_hyperparams, fine_hyperparams):
     """Trains the model first as a feature extractor and then fine tunes the model."""
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(
-        log_dir=os.path.join('logs', experiment_name)
-    )
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
 
     tf.keras.backend.clear_session()
     model = create_model(model_params, base_hyperparams)
@@ -57,17 +55,16 @@ def feature_extract_and_fine_tune(experiment_name, train_ds, valid_ds, model_par
     return model
 
 
-def cross_validate(experiment_name, train_folds, valid_folds, model_params, base_hyperparams, fine_hyperparams, hparams):
+def cross_validate(logdir, train_folds, valid_folds, model_params, base_hyperparams, fine_hyperparams, hparams):
     """Cross validates model performance with the given folds."""
     train_accs, valid_accs, train_losses, valid_losses = [], [], [], []
     for i, (train_ds, valid_ds) in enumerate(zip(train_folds, valid_folds)):
         k = i + 1
-        experiment_name_fold = f'{experiment_name}: {k}-fold'
-        rundir = os.path.join('logs', 'hparam_tuning', experiment_name_fold)
-        print(f'# -------------------- {experiment_name_fold} -------------------- #')
+        fold_logdir = f'{logdir}: {k}-fold'
+        print(f'# -------------------- {fold_logdir} -------------------- #')
 
-        tensorboard_callback = tf.keras.callbacks.TensorBoard(rundir)
-        hparams_callback = hp.KerasCallback(rundir, hparams)
+        tensorboard_callback = tf.keras.callbacks.TensorBoard(fold_logdir)
+        hparams_callback = hp.KerasCallback(fold_logdir, hparams)
 
         tf.keras.backend.clear_session()
         model = create_model(model_params, base_hyperparams)
@@ -98,7 +95,7 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
         train_loss = history.history['loss'][-1]
         valid_loss = history.history['val_loss'][-1]
 
-        print(f'{experiment_name} | Train Loss: {train_loss} | Train Accuracy: {train_acc} | Validation Loss: {valid_loss} | Validation Accuracy: {valid_acc}\n')
+        print(f'{fold_logdir} | Train Loss: {train_loss} | Train Accuracy: {train_acc} | Validation Loss: {valid_loss} | Validation Accuracy: {valid_acc}\n')
 
         # models.append(model)
         train_accs.append(train_acc)
@@ -115,11 +112,9 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
     return avg_train_loss, avg_train_acc, avg_valid_loss, avg_valid_acc
 
 
-def ensemble_learn(experiment_name, train_ds, valid_ds, model_params, hyperparams):
+def ensemble_learn(logdir, train_ds, valid_ds, model_params, hyperparams):
     """Trains an ensemble of pretrained models."""
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(
-        log_dir=os.path.join('logs', experiment_name)
-    )
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
 
     tf.keras.backend.clear_session()
     model = create_ensemble_model(model_params, hyperparams)
