@@ -63,12 +63,11 @@ def cross_validate(experiment_name, train_folds, valid_folds, model_params, base
     for i, (train_ds, valid_ds) in enumerate(zip(train_folds, valid_folds)):
         k = i + 1
         experiment_name_fold = f'{experiment_name}: {k}-fold'
+        rundir = os.path.join('logs', 'hparam_tuning', experiment_name_fold)
         print(f'# -------------------- {experiment_name_fold} -------------------- #')
 
-        tensorboard_callback = tf.keras.callbacks.TensorBoard(
-            log_dir=os.path.join('logs', experiment_name_fold)
-        )
-        hparams_callback = hp.KerasCallback(os.path.join('logs', 'hparam_tuning', experiment_name_fold), hparams)
+        tensorboard_callback = tf.keras.callbacks.TensorBoard(rundir)
+        hparams_callback = hp.KerasCallback(rundir, hparams)
 
         tf.keras.backend.clear_session()
         model = create_model(model_params, base_hyperparams)
