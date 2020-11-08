@@ -10,7 +10,7 @@ def preprocess_images(src_path, dst_path, clip_limit=4, tile_grid_size=(8, 8)):
     filenames = tf.io.gfile.listdir(path=src_path)
     for filename in filenames:
         img = cv.imread(os.path.join(src_path, filename))
-        img = hist_norm(img)
+        # img = hist_norm(img)
         img = clahe(img, clip_limit, tile_grid_size)
         cv.imwrite(os.path.join(dst_path, filename), img)
 
@@ -50,8 +50,8 @@ def main():
     train_label = 'train_label.csv'
 
     # hyperparams
-    clip_limit = 4
-    tile_grid_size = (8, 8)
+    clip_limit = 8
+    tile_grid_size = (32, 32)
 
     # enhance images
     print(f'Preprocessing train images...')
