@@ -56,4 +56,4 @@ This code comes with a companion jupyter notebook `tune.ipynb` to visualise the 
 1. The images are first enhanced using a technique called Contrast Limited Adaptive Histogram Equalization (CLAHE) to improve contrast of the CT scans.
 2. Data augmentation techniques, random flips and rotations are used to improve diversity of the small dataset
 3. Each of the 3 models (MobileNetV2, Xception and ResNet152V2) are pretrained on the imagenet dataset and used as feature extractors. The models are then fine tuned by unfreezing some layers.
-4. K-fold cross validation is used to select the best hyperparameters for each model which are then used to train a soft voting ensemble model.
+4. K-fold cross validation is used to select the best hyperparameters for each model which are then used to train a integrated stacked ensemble model.
