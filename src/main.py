@@ -131,14 +131,14 @@ def main():
                 'train_batch_size': 64,
                 'valid_batch_size': 64,
                 'test_batch_size': 64,
-                'num_epochs': 1,
+                'num_epochs': 300,
                 'learning_rate': 1e-4,
-                'dropout': 0.2
+                'dropout': 0.5
             },
             'fine_hyperparams': {
-                'num_epochs': 1,
+                'num_epochs': 150,
                 'learning_rate': 1e-5,
-                'fine_tune_at': 100,
+                'fine_tune_at': 80,
             }
         },
         'MobileNetV2': {
@@ -152,12 +152,12 @@ def main():
                 'train_batch_size': 64,
                 'valid_batch_size': 64,
                 'test_batch_size': 64,
-                'num_epochs': 1,
+                'num_epochs': 150,
                 'learning_rate': 1e-4,
                 'dropout': 0.2
             },
             'fine_hyperparams': {
-                'num_epochs': 1,
+                'num_epochs': 50,
                 'learning_rate': 1e-5,
                 'fine_tune_at': 100,
             }
@@ -173,14 +173,14 @@ def main():
                 'train_batch_size': 64,
                 'valid_batch_size': 64,
                 'test_batch_size': 64,
-                'num_epochs': 1,
-                'learning_rate': 1e-4,
-                'dropout': 0.2
+                'num_epochs': 200,
+                'learning_rate': 5e-4,
+                'dropout': 0.25
             },
             'fine_hyperparams': {
-                'num_epochs': 1,
+                'num_epochs': 100,
                 'learning_rate': 1e-5,
-                'fine_tune_at': 100,
+                'fine_tune_at': 544,
             }
         },
     }
@@ -196,9 +196,9 @@ def main():
             'train_batch_size': 64,
             'valid_batch_size': 64,
             'test_batch_size': 64,
-            'num_epochs': 1,
+            'num_epochs': 50,
             'learning_rate': 1e-4,
-            'hidden_units': 10
+            'hidden_units': 16
         }
     }
 
