@@ -42,8 +42,9 @@ The instructions below trains and evaluates the proposed model on the lung CT da
 1. The images are first enhanced using a technique called Contrast Limited Adaptive Histogram Equalization (CLAHE)[[1]](#1) to improve contrast of the CT scans.
 2. Data augmentation techniques, random flips and rotations are used to improve diversity of the small dataset
 3. Each of the 3 models (MobileNetV2, Xception and ResNet152V2) are pretrained on the imagenet dataset and used as feature extractors. The models are then fine tuned by unfreezing some layers.
-4. K-fold cross validation is used to select the best hyperparameters for each model which are then used to train a soft voting ensemble model.
+4. K-fold cross validation is used to select the best hyperparameters for each model which are then used to train a integrated stacked ensemble model.
 
 ## References
-<a id="1">[1]</a> 
+
+<a id="1">[1]</a>
 Zuiderveld, K. Contrast Limited Adaptive Histogram Equalization. Academic Press Inc., 1994.
